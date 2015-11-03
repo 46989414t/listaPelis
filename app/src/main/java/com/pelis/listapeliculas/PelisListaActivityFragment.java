@@ -2,6 +2,7 @@ package com.pelis.listapeliculas;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.telecom.Call;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -106,9 +107,13 @@ public class PelisListaActivityFragment extends Fragment {
                      .addConverterfactory(GsonConverterFactory.create())
                      .build;
         PelisListaInterface servei = retrofit.create(PelisListaInterface.class);
+
+        Call<ApiData> call = servei.getPaliculesMesVistes("es");
     }
 
     public interface PelisListaInterface{
+        @GET("lists/movies/box_office.json")
+        Call<ApiData> getPeliculesMesVistes(@Query("country") String pais);
 
     }
 
