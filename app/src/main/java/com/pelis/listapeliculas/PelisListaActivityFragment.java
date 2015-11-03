@@ -105,7 +105,12 @@ public class PelisListaActivityFragment extends Fragment {
                      .baseUrl(BASE_URL)
                      .addConverterfactory(GsonConverterFactory.create())
                      .build;
-         }
+        PelisListaInterface servei = retrofit.create(PelisListaInterface.class);
+    }
+
+    public interface PelisListaInterface{
+
+    }
 
 
 
