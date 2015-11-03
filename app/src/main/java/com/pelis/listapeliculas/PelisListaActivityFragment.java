@@ -1,7 +1,7 @@
 package com.pelis.listapeliculas;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +13,9 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import retrofit.GsonConverterFactory;
+import retrofit.Retrofit;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -96,8 +99,12 @@ public class PelisListaActivityFragment extends Fragment {
            return super.onOptionsItemSelected(item);
          }
 
-         private void refresh() {
-             
+    private void refresh() {
+            final String BASE_URL="http://api.themoviedb.org/3/movie/550";
+             Retrofit retrofit = Retrofit.Builder()
+                     .baseUrl(BASE_URL)
+                     .addConverterfactory(GsonConverterFactory.create())
+                     .build;
          }
 
 
