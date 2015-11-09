@@ -106,23 +106,30 @@ public class PelisListaActivityFragment extends Fragment {
          }
 
     private void refresh() {
-            final String BASE_URL="http://api.themoviedb.org/3/movie/550";
+        final String BASE_URL="http://api.themoviedb.org/3/movie/550";
+        //parametro APIKEY
+        final String API_KEY = "18cae3b3818a484b1bf732d10321342b";
+
              Retrofit retrofit = new Retrofit.Builder()
                      .baseUrl(BASE_URL)
                      .addConverterfactory(GsonConverterFactory.create())
                      .build;
         PelisListaInterface servei = retrofit.create(PelisListaInterface.class);
 
-        Call<ApiData> call = servei.getPaliculesMesVistes("es");
+        Call<ApiData> call = servei.getPaliculesMesVistes("es", API_KEY);
         //la llamada se hace en segundo plano
         call.enqueue(new Callback<ApiData>(){
             @Override
             public void onResponse (Response<ApiData> response, Retrofit retrofit){
                 //comprueba que la peticion ha ido OK
                 if (response.isSuccessful()){
-                    Log.d(null, "OK");
+                    //Log.d(null, "OK");
                     //extraer datos de la respuesta
                     ApiData apiData = response.body();
+                    Log.e("XXXX", apiData.getMovies().toString());
+                    else{
+                        Log.e("XXXX", response.errorBody().toString());
+                    }
                 }
             }
             @Override
@@ -136,11 +143,18 @@ public class PelisListaActivityFragment extends Fragment {
     public interface PelisListaInterface{
         //link patillado
         @GET("lists/movies/box_office.json")
-        Call<ApiData> getPeliculesMesVistes(@Query("country") String pais);
+        Call<ApiData> getPeliculesMesVistes(
+                @Query("country") String pais,
+                @Query("apikey") String apikey
+                );
+
 
         //link patillado
         @GET("lists/movies/upcoming.json")
-        Call<ApiData> getProximesEstrenes(@Query("country") String pais);
+        Call<ApiData> getProximesEstrenes(
+                @Query("country") String pais,
+                @Query("apikey") String apikey
+                );
 
     }
 
