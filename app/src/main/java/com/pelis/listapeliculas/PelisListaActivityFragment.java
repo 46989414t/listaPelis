@@ -12,11 +12,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.squareup.okhttp.Response;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
+import retrofit.http.GET;
+import retrofit.http.Query;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -102,18 +106,35 @@ public class PelisListaActivityFragment extends Fragment {
 
     private void refresh() {
             final String BASE_URL="http://api.themoviedb.org/3/movie/550";
-             Retrofit retrofit = Retrofit.Builder()
+             Retrofit retrofit = new Retrofit.Builder()
                      .baseUrl(BASE_URL)
                      .addConverterfactory(GsonConverterFactory.create())
                      .build;
         PelisListaInterface servei = retrofit.create(PelisListaInterface.class);
 
         Call<ApiData> call = servei.getPaliculesMesVistes("es");
+        //la llamada se hace en segundo plano
+        call.enqueue(new Callback<ApiData>(){
+            @Override
+            public void onResponse (Response<ApiData> response, Retrofit retrofit){
+
+            }
+            @Override
+            public void onFailure(Trowable t){
+
+            }
+        });
+
     }
 
     public interface PelisListaInterface{
+        //link patillado
         @GET("lists/movies/box_office.json")
         Call<ApiData> getPeliculesMesVistes(@Query("country") String pais);
+
+        //link patillado
+        @GET("lists/movies/upcoming.json")
+        Call<ApiData> getProximesEstrenes(@Query("country") String pais);
 
     }
 
