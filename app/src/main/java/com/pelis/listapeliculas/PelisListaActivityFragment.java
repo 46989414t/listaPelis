@@ -3,7 +3,6 @@ package com.pelis.listapeliculas;
 import android.graphics.Movie;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.telecom.Call;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,12 +13,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.squareup.okhttp.Response;
+import com.pelis.listapeliculas.JSON.Result;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import retrofit.Call;
+import retrofit.Callback;
 import retrofit.GsonConverterFactory;
+import retrofit.Response;
 import retrofit.Retrofit;
 import retrofit.http.GET;
 import retrofit.http.Query;
@@ -107,29 +109,29 @@ public class PelisListaActivityFragment extends Fragment {
          }
 
     private void refresh() {
-        final String BASE_URL="http://api.themoviedb.org/3/movie/550";
+        final String BASE_URL="http://api.themoviedb.org/3/movie/";
         //parametro APIKEY
         final String API_KEY = "18cae3b3818a484b1bf732d10321342b";
 
              Retrofit retrofit = new Retrofit.Builder()
                      .baseUrl(BASE_URL)
-                     .addConverterfactory(GsonConverterFactory.create())
-                     .build;
+                     .addConverterFactory(GsonConverterFactory.create())
+                     .build();
         PelisListaInterface servei = retrofit.create(PelisListaInterface.class);
 
-        Call<ApiData> call = servei.getPaliculesMesVistes("es", API_KEY);
+        Call<Result> call = servei.getPeliculesPopulars(API_KEY);
         //la llamada se hace en segundo plano
-        call.enqueue(new Callback<ApiData>(){
+        call.enqueue(new Callback<Result>(){
             @Override
-            public void onResponse (Response<ApiData> response, Retrofit retrofit){
+            public void onResponse (Response<Result> response, Retrofit retrofit){
                 //comprueba que la peticion ha ido OK
-                if (response.isSuccessful()) {
+                if (response.isSuccess()) {
                     //Log.d(null, "OK");
                     //extraer datos de la respuesta
-                    ApiData apiData = response.body();
-                    //Log.e("XXXX", apiData.getMovies().toString());
+                    Result Result = response.body();
+                    //Log.e("XXXX", Result.getMovies().toString());
                     adapter.clear();
-                    for (Movie peli : apiData.getMovies()){
+                    for (Movie peli : peli.getMovies()){
                         adapter.add(peli.getTitle());
                     }
                 }else{
@@ -138,29 +140,27 @@ public class PelisListaActivityFragment extends Fragment {
 
             }
             @Override
-            public void onFailure(Trowable t){
+            public void onFailure(Throwable t){
 
             }
         });
+        
 
     }
 
     public interface PelisListaInterface{
         //link patillado
-        @GET("lists/movies/box_office.json")
-        Call<ApiData> getPeliculesMesVistes(
-                @Query("country") String pais,
-                @Query("apikey") String apikey
-                );
+        @GET("popular")
+        Call<Result> getPeliculesPopulars(
+                @Query("api_key") String apikey
+        );
 
 
         //link patillado
-        @GET("lists/movies/upcoming.json")
-        Call<ApiData> getProximesEstrenes(
-                @Query("country") String pais,
-                @Query("apikey") String apikey
-                );
-
+        @GET("top_rated")
+        Call<Result> getPeliculesMillorNota(
+                @Query("api_key") String apikey
+        );
     }
 
 
