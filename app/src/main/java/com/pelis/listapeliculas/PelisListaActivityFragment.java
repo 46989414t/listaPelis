@@ -121,6 +121,8 @@ public class PelisListaActivityFragment extends Fragment {
                 //comprueba que la peticion ha ido OK
                 if (response.isSuccessful()){
                     Log.d(null, "OK");
+                    //extraer datos de la respuesta
+                    ApiData apiData = response.body();
                 }
             }
             @Override
