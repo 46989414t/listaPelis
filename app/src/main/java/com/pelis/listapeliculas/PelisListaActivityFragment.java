@@ -1,5 +1,6 @@
 package com.pelis.listapeliculas;
 
+import android.graphics.Movie;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telecom.Call;
@@ -122,15 +123,19 @@ public class PelisListaActivityFragment extends Fragment {
             @Override
             public void onResponse (Response<ApiData> response, Retrofit retrofit){
                 //comprueba que la peticion ha ido OK
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     //Log.d(null, "OK");
                     //extraer datos de la respuesta
                     ApiData apiData = response.body();
-                    Log.e("XXXX", apiData.getMovies().toString());
-                    else{
-                        Log.e("XXXX", response.errorBody().toString());
+                    //Log.e("XXXX", apiData.getMovies().toString());
+                    adapter.clear();
+                    for (Movie peli : apiData.getMovies()){
+                        adapter.add(peli.getTitle());
                     }
+                }else{
+                    Log.e("XXXX", response.errorBody().toString());
                 }
+
             }
             @Override
             public void onFailure(Trowable t){
