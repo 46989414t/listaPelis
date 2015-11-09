@@ -3,6 +3,7 @@ package com.pelis.listapeliculas;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telecom.Call;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -117,7 +118,10 @@ public class PelisListaActivityFragment extends Fragment {
         call.enqueue(new Callback<ApiData>(){
             @Override
             public void onResponse (Response<ApiData> response, Retrofit retrofit){
-
+                //comprueba que la peticion ha ido OK
+                if (response.isSuccessful()){
+                    Log.d(null, "OK");
+                }
             }
             @Override
             public void onFailure(Trowable t){
